@@ -15,10 +15,18 @@ class ProductController extends Controller
 
     public function list()
     {
-        return [
-            'status'    => true,
-            'data'      => Product::all()
-        ];
+        try {
+            return [
+                'status'    => true,
+                'data'      => Product::all()
+            ];
+        } catch (Exception $err) {
+            Log::error(sprintf('Error on getting product list [%s].', $err->getMessage()));
+            return [
+                'status'    => false,
+                'message'   => 'Failed on getting product list.'
+            ];
+        }
     }
 
     public function create(Request $request)
@@ -47,6 +55,7 @@ class ProductController extends Controller
                 'message'   => 'Failed on creating product.'
             ];
         } catch (Exception $err) {
+            Log::error(sprintf('Error on creating product [%s].', $err->getMessage()));
             return [
                 'status'    => false,
                 'message'   => 'Failed on creating product.'
@@ -71,7 +80,7 @@ class ProductController extends Controller
                 'data'      => Product::where(['sku' => $sku])->first()
             ];
         } catch (Exception $err) {
-            Log::error(sprintf('Error on getting product by sku [%s].', $err->getMessage()));
+            Log::error(sprintf('Error on getting product by sku %s [%s].', $sku, $err->getMessage()));
             return [
                 'status'    => false,
                 'message'   => 'Failed on retrieving product'
@@ -107,7 +116,7 @@ class ProductController extends Controller
                 'message' => 'Successfully updating product.'
             ];
         } catch (Exception $err) {
-            Log::error(sprintf('Error on updating product with sku [%s].', $err->getMessage()));
+            Log::error(sprintf('Error on updating product with sku %s [%s].', $sku, $err->getMessage()));
             return [
                 'status' => false,
                 'message' => 'Failed on updating product.'
@@ -139,7 +148,7 @@ class ProductController extends Controller
                 'message' => 'Successfully deleting product.'
             ];
         } catch (Exception $err) {
-            Log::error(sprintf('Error on deleting product with sku [%s].', $err->getMessage()));
+            Log::error(sprintf('Error on deleting product with sku %s [%s].', $sku, $err->getMessage()));
             return [
                 'status' => false,
                 'message' => 'Failed on deleting product.'

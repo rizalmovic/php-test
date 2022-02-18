@@ -19,10 +19,15 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'products'], function () use ($router) {
-    $router->get('', 'ProductController@list');
-    $router->post('', 'ProductController@create');
-    $router->get('{sku}', 'ProductController@get');
-    $router->put('{sku}', 'ProductController@update');
-    $router->delete('{sku}', 'ProductController@delete');
+$router->post('/register', 'AuthController@register');
+$router->post('/login', 'AuthController@login');
+
+$router->group(['middleware' => 'auth:api'], function () use ($router) {
+    $router->group(['prefix' => 'products'], function () use ($router) {
+        $router->get('', 'ProductController@list');
+        $router->post('', 'ProductController@create');
+        $router->get('{sku}', 'ProductController@get');
+        $router->put('{sku}', 'ProductController@update');
+        $router->delete('{sku}', 'ProductController@delete');
+    });
 });
