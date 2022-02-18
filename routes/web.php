@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Http\Controllers\ProductController;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -15,4 +17,12 @@
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+
+$router->group(['prefix' => 'products'], function () use ($router) {
+    $router->get('', 'ProductController@list');
+    $router->post('', 'ProductController@create');
+    $router->get('{sku}', 'ProductController@get');
+    $router->put('{sku}', 'ProductController@update');
+    $router->delete('{sku}', 'ProductController@delete');
 });
